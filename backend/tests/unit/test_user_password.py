@@ -4,10 +4,8 @@ from app.models import db, User
 
 
 class TestUserPasswordHashing:
-    """Test User model password hashing"""
     
     def test_password_hashing(self, app):
-        """Test password is hashed correctly"""
         with app.app_context():
             user = User(username='testuser', email='test@test.com')
             user.set_password('mypassword')

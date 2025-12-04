@@ -4,10 +4,8 @@ from app.models import db, User, Project, Task
 
 
 class TestTaskCreation:
-    """Test Task model creation"""
     
     def test_task_creation(self, app):
-        """Test task can be created"""
         with app.app_context():
             user = User(username='user', email='user@test.com')
             user.set_password('password')

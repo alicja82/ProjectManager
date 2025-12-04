@@ -4,10 +4,8 @@ from app.models import db, User, Project
 
 
 class TestProjectCreation:
-    """Test Project model creation"""
     
     def test_project_creation(self, app):
-        """Test project can be created with valid data"""
         with app.app_context():
             user = User(username='owner', email='owner@test.com')
             user.set_password('password')
