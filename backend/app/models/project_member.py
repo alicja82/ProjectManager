@@ -12,7 +12,6 @@ class ProjectMember(db.Model):
     role = db.Column(db.String(20), nullable=False, default='member')  # owner, member
     joined_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Unique constraint - jeden użytkownik nie może być dwukrotnie w tym samym projekcie
     __table_args__ = (db.UniqueConstraint('user_id', 'project_id', name='_user_project_uc'),)
     
     def to_dict(self):

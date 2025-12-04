@@ -8,16 +8,13 @@ class ProjectService:
     
     @staticmethod
     def get_user_projects(user_id: int) -> List[Project]:
-        """Get all projects for a user (owned + member)"""
         owned_projects = Project.query.filter_by(owner_id=user_id).all()
         memberships = ProjectMember.query.filter_by(user_id=user_id).all()
-        # Filtrowanie projektów gdzie user jest członkiem ale nie ownerem (aby uniknąć duplikatów)
         member_projects = [m.project for m in memberships if m.project.owner_id != user_id]
         return owned_projects + member_projects
     
     @staticmethod
     def create_project(user_id: int, name: str, description: str = '') -> dict:
-        """Create a new project"""
         try:
             name = name.strip() if name else ''
             description = description.strip() if description else ''
@@ -27,7 +24,7 @@ class ProjectService:
             
             project = Project(name=name, description=description, owner_id=user_id)
             db.session.add(project)
-            db.session.flush()  # Potrzebne project.id przed utworzeniem ProjectMember
+            db.session.flush()
             
             owner_member = ProjectMember(user_id=user_id, project_id=project.id, role='owner')
             db.session.add(owner_member)
@@ -43,7 +40,6 @@ class ProjectService:
     
     @staticmethod
     def get_project(project_id: int, user_id: int) -> Project:
-        """Get project details with access check"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -56,7 +52,6 @@ class ProjectService:
     
     @staticmethod
     def update_project(project_id: int, user_id: int, name: Optional[str] = None, description: Optional[str] = None) -> dict:
-        """Update project (owner only)"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -78,7 +73,6 @@ class ProjectService:
     
     @staticmethod
     def delete_project(project_id: int, user_id: int) -> dict:
-        """Delete project (owner only)"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -92,7 +86,6 @@ class ProjectService:
     
     @staticmethod
     def invite_user(project_id: int, owner_id: int, username: str) -> dict:
-        """Invite user to project (owner only)"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -119,7 +112,6 @@ class ProjectService:
     
     @staticmethod
     def remove_member(project_id: int, owner_id: int, user_id: int) -> dict:
-        """Remove member from project (owner only)"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')

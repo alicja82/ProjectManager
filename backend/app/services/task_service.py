@@ -8,7 +8,6 @@ class TaskService:
     
     @staticmethod
     def get_project_tasks(project_id: int, user_id: int, status: Optional[str] = None, assigned_to: Optional[int] = None) -> List[Task]:
-        """Get all tasks for a project with optional filtering"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -29,7 +28,6 @@ class TaskService:
     
     @staticmethod
     def create_task(project_id: int, user_id: int, title: str, description: str = '', status: str = 'To do', assigned_to: Optional[int] = None) -> dict:
-        """Create a new task"""
         project = Project.query.get(project_id)
         if not project:
             raise ValueError('Projekt nie został znaleziony')
@@ -45,7 +43,6 @@ class TaskService:
         if status not in valid_statuses:
             raise ValueError(f'Status musi być jednym z: {", ".join(valid_statuses)}')
         
-        # Weryfikacja czy assigned_to jest członkiem projektu (bezpieczeństwo)
         if assigned_to:
             assigned_member = ProjectMember.query.filter_by(user_id=assigned_to, project_id=project_id).first()
             if not assigned_member:
@@ -59,7 +56,6 @@ class TaskService:
     
     @staticmethod
     def update_task(task_id: int, user_id: int, title: Optional[str] = None, description: Optional[str] = None, status: Optional[str] = None, assigned_to: Optional[int] = None) -> dict:
-        """Update a task"""
         task = Task.query.get(task_id)
         if not task:
             raise ValueError('Zadanie nie zostało znalezione')
@@ -83,7 +79,6 @@ class TaskService:
                 raise ValueError(f'Status musi być jednym z: {", ".join(valid_statuses)}')
             task.status = status
         
-        # assigned_to > 0 oznacza przypisanie, <= 0 oznacza odznaczenie przypisania
         if assigned_to is not None:
             if assigned_to > 0:
                 assigned_member = ProjectMember.query.filter_by(user_id=assigned_to, project_id=task.project_id).first()
@@ -98,7 +93,6 @@ class TaskService:
     
     @staticmethod
     def delete_task(task_id: int, user_id: int) -> dict:
-        """Delete a task"""
         task = Task.query.get(task_id)
         if not task:
             raise ValueError('Zadanie nie zostało znalezione')

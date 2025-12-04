@@ -13,7 +13,6 @@ class Project(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # Relacje z cascade delete - usunięcie projektu usuwa wszystkich członków i zadania
     members = db.relationship('ProjectMember', backref='project', lazy=True, cascade='all, delete-orphan')
     tasks = db.relationship('Task', backref='project', lazy=True, cascade='all, delete-orphan')
     

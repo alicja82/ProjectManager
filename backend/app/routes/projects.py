@@ -7,7 +7,6 @@ projects_bp = Blueprint('projects', __name__)
 @projects_bp.route('/projects', methods=['GET'])
 @jwt_required()
 def get_projects():
-    """Pobieranie wszystkich projektów użytkownika"""
     try:
         current_user_id = get_jwt_identity()
         projects = ProjectService.get_user_projects(current_user_id)
@@ -23,7 +22,6 @@ def get_projects():
 @projects_bp.route('/projects', methods=['POST'])
 @jwt_required()
 def create_project():
-    """Tworzenie nowego projektu"""
     try:
         current_user_id = get_jwt_identity()
         data = request.get_json()
@@ -45,7 +43,6 @@ def create_project():
 @projects_bp.route('/projects/<int:project_id>', methods=['GET'])
 @jwt_required()
 def get_project(project_id):
-    """Pobieranie szczegółów projektu"""
     try:
         current_user_id = get_jwt_identity()
         project = ProjectService.get_project(project_id, current_user_id)
@@ -63,7 +60,6 @@ def get_project(project_id):
 @projects_bp.route('/projects/<int:project_id>', methods=['PUT'])
 @jwt_required()
 def update_project(project_id):
-    """Aktualizacja projektu (tylko owner)"""
     try:
         current_user_id = get_jwt_identity()
         data = request.get_json()
@@ -88,7 +84,6 @@ def update_project(project_id):
 @projects_bp.route('/projects/<int:project_id>', methods=['DELETE'])
 @jwt_required()
 def delete_project(project_id):
-    """Usunięcie projektu (tylko owner)"""
     try:
         current_user_id = get_jwt_identity()
         ProjectService.delete_project(project_id, current_user_id)

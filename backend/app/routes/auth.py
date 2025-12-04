@@ -7,7 +7,6 @@ import re
 auth_bp = Blueprint('auth', __name__)
 
 def validate_email(email):
-    """Sprawdza format email za pomocą regex - wymaga @ i domeny"""
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
 
@@ -16,7 +15,6 @@ def validate_password(password):
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
-    """Rejestracja nowego użytkownika"""
     try:
         data = request.get_json()
         
@@ -54,7 +52,6 @@ def register():
         }), 201
         
     except IntegrityError:
-        # Race condition - ktoś zdążył zarejestrować ten sam username/email między sprawdzeniem a zapisem
         db.session.rollback()
         return jsonify({'error': 'Błąd podczas rejestracji - użytkownik już istnieje'}), 409
     except Exception as e:
@@ -64,7 +61,6 @@ def register():
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    """Logowanie użytkownika"""
     try:
         data = request.get_json()
         
@@ -79,7 +75,6 @@ def login():
         if not user or not user.check_password(password):
             return jsonify({'error': 'Nieprawidłowy username lub hasło'}), 401
         
-        # JWT token z user.id jako identity
         access_token = create_access_token(identity=user.id)
         
         return jsonify({
@@ -95,7 +90,6 @@ def login():
 @auth_bp.route('/me', methods=['GET'])
 @jwt_required()
 def get_current_user():
-    """Pobranie informacji o zalogowanym użytkowniku"""
     try:
         current_user_id = get_jwt_identity()
         user = User.query.get(current_user_id)

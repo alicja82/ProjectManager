@@ -8,7 +8,6 @@ class AuthService:
     
     @staticmethod
     def register_user(username: str, email: str, password: str) -> dict:
-        """Register a new user"""
         if not username or not email or not password:
             raise ValueError('Wszystkie pola są wymagane')
         
@@ -34,7 +33,6 @@ class AuthService:
     
     @staticmethod
     def login_user(username: str, password: str) -> dict:
-        """Login user and generate JWT token"""
         if not username or not password:
             raise ValueError('Username i hasło są wymagane')
         
